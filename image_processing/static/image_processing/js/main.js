@@ -171,8 +171,6 @@ $(document).ready(function() {
         li.click(add_node.bind(this, comp));
         $('#component_list').append(li);
     }
-
-
 });
 
 jsPlumb.bind("ready", function() {
@@ -184,8 +182,10 @@ jsPlumb.bind("ready", function() {
 
     // new connection established - update data
     jsPlumb.bind("connection", function(conInfo) {
-        var elem_data = data[$(conInfo.target).data("uuid")];
-        var source_uuid = $(conInfo.source).data("uuid");
+      var source_uuid = $(conInfo.source).data("uuid");
+      var target_uuid = $(conInfo.target).data("uuid");
+      var cmp = cmps[target_uuid];
+      var elem_data = cmp.data;
         if (elem_data["input"] == null) {
             elem_data["input"] = {};
         }
@@ -203,8 +203,10 @@ jsPlumb.bind("ready", function() {
 
     //connection detached - update data
     jsPlumb.bind("connectionDetached", function(conInfo) {
-        var elem_data = data[$(conInfo.target).data("uuid")];
         var source_uuid = $(conInfo.source).data("uuid");
+        var target_uuid = $(conInfo.target).data("uuid");
+        var cmp = cmps[target_uuid];
+        var elem_data = cmp.data;
         if (elem_data != null &&
             "input" in elem_data &&
             conInfo.sourceEndpoint.scope in elem_data["input"]) {
