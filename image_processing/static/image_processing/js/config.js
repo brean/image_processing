@@ -1,6 +1,6 @@
 var components = [
-    ImageFolder,
-    Greyscale,
+    Folder,
+    Grayscale,
     TextureAtlas
     //"filter_files",
     //"compress"

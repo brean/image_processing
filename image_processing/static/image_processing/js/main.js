@@ -182,43 +182,53 @@ jsPlumb.bind("ready", function() {
 
     // new connection established - update data
     jsPlumb.bind("connection", function(conInfo) {
-      var source_uuid = $(conInfo.source).data("uuid");
-      var target_uuid = $(conInfo.target).data("uuid");
-      var cmp = cmps[target_uuid];
-      var elem_data = cmp.data;
-        if (elem_data["input"] == null) {
-            elem_data["input"] = {};
-        }
-        if (conInfo.sourceEndpoint.scope in elem_data["input"]) {
-            var input = elem_data["input"][conInfo.sourceEndpoint.scope];
-            if (input.indexOf(source_uuid) < 0) {
-                // check, if uuid is already connected
-                // (this check is required when we load the data)
-                input.push(source_uuid);
+        var source_uuid = $(conInfo.source).data("uuid");
+        var target_uuid = $(conInfo.target).data("uuid");
+        var target_data = cmps[target_uuid].data;
+        var source_data = cmps[source_uuid].data;
+
+        var add_data = function(data, key, uuid) {
+            if (data[key] == null) {
+                data[key] = {};
             }
-        } else {
-            elem_data["input"][conInfo.sourceEndpoint.scope] = [source_uuid];
+            if (conInfo.sourceEndpoint.scope in data[key]) {
+                var uuid_list = data[key][conInfo.sourceEndpoint.scope];
+                if (uuid_list.indexOf(uuid) < 0) {
+                    // check, if uuid is already connected
+                    uuid_list.push(uuid);
+                }
+            } else {
+                data[key][conInfo.sourceEndpoint.scope] = [uuid];
+            }
         }
+
+        add_data(target_data, 'input', source_uuid);
+        add_data(source_data, 'output', target_uuid);
     });
 
     //connection detached - update data
     jsPlumb.bind("connectionDetached", function(conInfo) {
         var source_uuid = $(conInfo.source).data("uuid");
         var target_uuid = $(conInfo.target).data("uuid");
-        var cmp = cmps[target_uuid];
-        var elem_data = cmp.data;
-        if (elem_data != null &&
-            "input" in elem_data &&
-            conInfo.sourceEndpoint.scope in elem_data["input"]) {
-            if (elem_data["input"].length == 1 &&
-                elem_data["input"][conInfo.sourceEndpoint.scope].length == 1) {
-                // removed last connection - remove input completely
-                delete elem_data["input"];
-            } else {
-                var dat = elem_data["input"][conInfo.sourceEndpoint.scope];
-                dat.splice(dat.indexOf(source_uuid), 1);
+        var target_data = cmps[target_uuid].data;
+        var source_data = cmps[source_uuid].data;
+
+        var remove_data = function(data, key, uuid) {
+            if (data != null && key in data &&
+                conInfo.sourceEndpoint.scope in data[key]) {
+                if (data[key].length == 1 &&
+                    data[key][conInfo.sourceEndpoint.scope].length == 1) {
+                    // removed last connection - remove key completely
+                    delete data[key];
+                } else {
+                    var value = data[key][conInfo.sourceEndpoint.scope];
+                    value.splice(value.indexOf(uuid), 1);
+                }
             }
         }
+
+        remove_data(target_data, 'input', source_uuid);
+        remove_data(source_data, 'output', target_uuid);
     });
 
     jsPlumb.bind("connectionMoved", function(conInfo) {

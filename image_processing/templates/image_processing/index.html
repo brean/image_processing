@@ -22,7 +22,7 @@
 
     {# js files #}
     <script src="{{ static('image_processing/lib/guid/guid.js') }}" type="text/javascript" charset="utf-8"></script>
-    {% for cmp in ['Component', 'ImageFolder', 'Greyscale', 'TextureAtlas'] %}
+    {% for cmp in ['Component', 'Folder', 'Grayscale', 'TextureAtlas'] %}
     <script src="{{ static('image_processing/js/components/'+cmp+'.js') }}" type="text/javascript" charset="utf-8"></script>
     {% endfor %}
     <script src="{{ static('image_processing/js/config.js') }}" type="text/javascript" charset="utf-8"></script>

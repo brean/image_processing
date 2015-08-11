@@ -4,4 +4,5 @@
 setuptools>=9.0
 rueckenwind>=0.4.1
 doit>=0.28.0
-
+Pillow>=2.9.0
+txtrpacker>=0.0.0

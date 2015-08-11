@@ -139,16 +139,20 @@ Component.prototype.createNode = function() {
     node.data("uuid", this.uuid);
     node.appendTo('#connect_area');
 
-    var container = $('<div style="text-align: center">' +
-        '<div style="font-size: 64px;">' +
+    var container = $('<div></div>');
+    if (this.config) {
+        var settings_click = $('<button>' +
+                ' <i class="glyphicon glyphicon-cog"></i></button>');
+        settings_click.click(this.showConfig.bind(this));
+        container.append(settings_click);
+    }
+    var icon_name = $('<span style="font-size: 14px;">&nbsp;' +
             this.icon +
-        '</div><span style="font-size: 10px;">'+this._name+'</span></div>');
-    node.append(container);
+        '&nbsp</span>&nbsp' +
+        '<span style="font-size: 10px;">'+this._name+'&nbsp;</span>');
 
-    var settings_click = $('<button><nobr><span class="title">' + this.data.title + '</span>' +
-        ' <i class="glyphicon glyphicon-cog"></i></nobr></button>');
-    settings_click.click(this.showConfig.bind(this));
-    node.append(settings_click);
+    container.append(icon_name);
+    node.append(container);
 
     if (this.data.pos && this.data.pos.x && this.data.pos.y) {
         node.css("left", this.data.pos.x);
