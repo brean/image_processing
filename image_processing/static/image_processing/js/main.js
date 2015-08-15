@@ -115,6 +115,7 @@ function send_tasks() {
 $(document).ready(function() {
     var pos = {x: 0, y: 0};
     // clicked anywhere - show dialog
+    /*
     $(document).click(function (e) {
         if (e.target !== document.documentElement) {
             return;
@@ -130,47 +131,59 @@ $(document).ready(function() {
             }
         });
     });
+    */
 
-    function add_node(cmp_cls) {
+    function add_node(cmp_cls, x, y) {
         var cmp = new cmp_cls({
             title: "",
             name: cmp_cls._name,
             config: {},
             pos: {
-                x: pos.x,
-                y: pos.y
+                x: x || 0,
+                y: y || 0
             }
         });
         cmps[cmp.uuid] = cmp;
-        $( "#add_component" ).dialog('close');
     }
 
-    $( "#add_component" ).dialog({
-        draggable: true,
-        modal: false,
-        resizable: false,
-        autoOpen: false
-    });
     var save = $('<button>save</button>');
     save.click(local_save_data);
-    $( "#add_component" ).append(save);
+    $( "#button_area" ).append(save);
 
     var load = $('<input type="file" />');
     load.on("change", local_load_data);
-    $( "#add_component" ).append(load);
+    $( "#button_area" ).append(load);
 
     var run = $('<button>run</button>');
     run.click(send_tasks);
-    $( "#add_component" ).append(run);
+    $( "#button_area" ).append(run);
 
     for (var i=0; i < components.length; i++) {
-        var comp = components[i];
+        var cmp_cls = components[i];
         var li = $('<li class="ui-state-default add_window"></li>');
-        li.append($(comp.icon));
-        li.append('&nbsp;' + comp.name);
-        li.click(add_node.bind(this, comp));
+        li.append($(cmp_cls.icon));
+        li.append('&nbsp;' + cmp_cls.name);
+        li.click(add_node.bind(this, cmp_cls));
+        li.draggable({
+            revert: "invalid",
+            helper: "clone",
+            cursor: "move",
+            appendTo: "body"
+        }).data("cmp_cls", cmp_cls);
         $('#component_list').append(li);
-    }
+    };
+
+    $('#main').droppable({
+        accept: '#component_list > li',
+        drop: function(event, ui) {
+            add_node($(ui.draggable).data("cmp_cls"),
+                     event.clientX-event.target.offsetLeft,
+                     event.clientY)
+        }
+    });
+
+    //jquery-ui
+    $('body').layout({ applyDemoStyles: true });
 });
 
 jsPlumb.bind("ready", function() {
