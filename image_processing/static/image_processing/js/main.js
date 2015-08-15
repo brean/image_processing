@@ -37,7 +37,20 @@ function component_cls_by_name(name) {
     return null;
 }
 
+function reload() {
+    var data = {}
+    for (uuid in cmps) {
+        var cmp = cmps[uuid];
+        data[uuid] = cmp.getData();
+    }
+    parse_loaded_data(data);
+}
+
 function parse_loaded_data(data) {
+    cmps = {};
+    $('div.node').remove();
+    jsPlumb.deleteEveryEndpoint();
+    jsPlumb.repaintEverything();
     // override global data
     var node;
     $.each( data, function( uuid, node_data ) {
@@ -113,26 +126,6 @@ function send_tasks() {
  * create dialog to show new
  */
 $(document).ready(function() {
-    var pos = {x: 0, y: 0};
-    // clicked anywhere - show dialog
-    /*
-    $(document).click(function (e) {
-        if (e.target !== document.documentElement) {
-            return;
-        }
-        pos.x = e.pageX;
-        pos.y = e.pageY;
-        $("#add_component").dialog('open');
-        $("#add_component").dialog('option', {
-            position: {
-                my: 'left top',
-                at: '',
-                of: e
-            }
-        });
-    });
-    */
-
     function add_node(cmp_cls, x, y) {
         var cmp = new cmp_cls({
             title: "",
@@ -197,51 +190,20 @@ jsPlumb.bind("ready", function() {
     jsPlumb.bind("connection", function(conInfo) {
         var source_uuid = $(conInfo.source).data("uuid");
         var target_uuid = $(conInfo.target).data("uuid");
-        var target_data = cmps[target_uuid].data;
-        var source_data = cmps[source_uuid].data;
-
-        var add_data = function(data, key, uuid) {
-            if (data[key] == null) {
-                data[key] = {};
-            }
-            if (conInfo.sourceEndpoint.scope in data[key]) {
-                var uuid_list = data[key][conInfo.sourceEndpoint.scope];
-                if (uuid_list.indexOf(uuid) < 0) {
-                    // check, if uuid is already connected
-                    uuid_list.push(uuid);
-                }
-            } else {
-                data[key][conInfo.sourceEndpoint.scope] = [uuid];
-            }
-        }
-
-        add_data(target_data, 'input', source_uuid);
-        add_data(source_data, 'output', target_uuid);
+        var target = cmps[target_uuid];
+        var source = cmps[source_uuid];
+        var scope = conInfo.sourceEndpoint.scope;
+        source.connect(target, scope, 'output')
     });
 
     //connection detached - update data
     jsPlumb.bind("connectionDetached", function(conInfo) {
         var source_uuid = $(conInfo.source).data("uuid");
         var target_uuid = $(conInfo.target).data("uuid");
-        var target_data = cmps[target_uuid].data;
-        var source_data = cmps[source_uuid].data;
-
-        var remove_data = function(data, key, uuid) {
-            if (data != null && key in data &&
-                conInfo.sourceEndpoint.scope in data[key]) {
-                if (data[key].length == 1 &&
-                    data[key][conInfo.sourceEndpoint.scope].length == 1) {
-                    // removed last connection - remove key completely
-                    delete data[key];
-                } else {
-                    var value = data[key][conInfo.sourceEndpoint.scope];
-                    value.splice(value.indexOf(uuid), 1);
-                }
-            }
-        }
-
-        remove_data(target_data, 'input', source_uuid);
-        remove_data(source_data, 'output', target_uuid);
+        var target = cmps[target_uuid];
+        var source = cmps[source_uuid];
+        var scope = conInfo.sourceEndpoint.scope;
+        source.disconnect(target, scope, 'output');
     });
 
     jsPlumb.bind("connectionMoved", function(conInfo) {

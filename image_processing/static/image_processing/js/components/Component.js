@@ -132,6 +132,85 @@ Component.prototype.showConfig = function() {
     dialog.dialog({minWidth: 520});
 };
 
+/**
+ * remove single connection between this and another component
+ *
+ */
+Component.prototype.disconnect = function(other, scope, direction, both) {
+    var uuids = this.data[end][scope];
+    // find this uuid in other datas input/output
+    var pos = uuids.indexOf(other.uuid);
+    if (pos >= 0) {
+        if (uuids.length > 1) {
+            uuids.splice(pos, 1);
+        } else {
+            // remove last connection
+            delete this.data[direction];
+        }
+    }
+    // disconnect both ways
+    if (both || both === undefined) {
+        other.disconnect(
+            this, scope, (direction === 'output') ? 'input' : 'output');
+    }
+}
+
+Component.prototype.connect = function(other, scope, direction, both) {
+    if (this.data[direction] == null) {
+        this.data[direction] = {}
+    }
+    if (scope in this.data[direction]) {
+        var uuids = this.data[direction][scope];
+        if (uuids.indexOf(other.uuid) < 0) {
+            // check, if uuid is already connected
+            uuids.push(other.uuid);
+        }
+    } else {
+        this.data[direction][scope] = [other.uuid];
+    }
+    // connect both ways
+    if (both || both === undefined) {
+        other.connect(
+            this, scope, (direction === 'output') ? 'input' : 'output', false);
+    }
+}
+
+/**
+ * remove connection
+ */
+Component.prototype._removeConnections = function(direction) {
+    var start = direction;
+    for (var scope in this.data[start]) {
+        var startUuids = this.data[start][scope];
+        for (i = 0; i < startUuids.length; i++) {
+            this.disconnect(
+                cmps[startUuids[i]],
+                scope,
+                direction
+            );
+        }
+    }
+}
+
+/**
+ * remove all connections from this to any other component
+ *
+ * (used before deletion)
+ */
+Component.prototype.removeConnections = function() {
+    this._removeConnections('input');
+    this._removeConnections('output');
+}
+
+
+Component.prototype.remove = function() {
+    var i, scope;
+    // remove this component from all connected components
+    this.removeConnections();
+    delete cmps[this.uuid];
+    reload();
+}
+
 Component.prototype.createNode = function() {
     var node = $('<div class="node" id="' + this.uuid + '">');
     this.node = node;
@@ -150,8 +229,16 @@ Component.prototype.createNode = function() {
             this.icon +
         '&nbsp</span>&nbsp' +
         '<span style="font-size: 10px;">'+this._name+'&nbsp;</span>');
-
     container.append(icon_name);
+
+    var removeButton = $(
+        '<button type="button">' +
+            '<span class="glyphicon glyphicon-remove"></span>' +
+        '</button>');
+    var uuid = this.uuid;
+    removeButton.click(this.remove.bind(this));
+    container.append(removeButton);
+
     node.append(container);
 
     if (this.data.pos && this.data.pos.x && this.data.pos.y) {
