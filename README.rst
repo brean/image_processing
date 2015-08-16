@@ -13,9 +13,26 @@ Used firstly for game development to create asset pipelines (grayscale images, c
 
 Features
 ========
-- 2 Tasks out-of-the-box: grayscaling and texture atlas (but can be easily extended)
-- web UI to connect tasks
+- tasks
+  - grayscale
+  - texture atlas (using `txtrpacker <https://github.com/brean/txtrpacker>`)
+- web ui to connect tasks
 - Python based task (and dependency) management
+
+ToDo / wishlist
+===============
+- video how to install & use it
+- developer documentation
+- unit tests
+- create `celery <http://www.celeryproject.org/>` tasks
+- more tasks
+  - merge with background
+  - slice image into tiles (so the parts can be used in a texture atlas)
+  - write text
+  - scale/resize (create thumbnails)
+  - image filter from PIL (sharpen, smoth, find_edges, blur, ...)
+  - image analysis (Hough Line Transform, Histogram, ...)
+  - ...?
 
 Note
 ====
