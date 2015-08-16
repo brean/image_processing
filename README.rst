@@ -2,15 +2,20 @@
 image_processing
 ================
 
-Image Porcessing framework with easy-to-use web interface.
+image processing tool with easy-to-use web interface.
 Used firstly for game development (grayscale images, create texture atlas) but is extendable for any other type of image processing.
+
+Features
+========
+- 2 Tasks out-of-the-box: Grayscaling and Texture Atlas (but can be easily extended)
+- web UI to connect tasks
+- python based task management
 
 Discription
 ===========
-Python-Based Image Porcessing framework with easy-to-use web interface. Using [JSPLumber](https://jsplumbtoolkit.com/) you can easily wire folders and functions
-Uses [pydoit](http://pydoit.org/) to organize tasks.
+Python-based image processing tool with easy-to-use web interface. Using [JSPLumber](https://jsplumbtoolkit.com/) you can easily wire folders and functions
 
-Used firstly for game development (grayscale images, create texture atlas) but is extendable for any other type of image processing.
+Used firstly for game development to create asset pipelines (grayscale images, create texture atlas, copy files, ...) but is extendable for any other type of image processing.
 
 Note
 ====
