@@ -151,7 +151,7 @@ Component.prototype.disconnect = function(other, scope, direction, both) {
     // disconnect both ways
     if (both || both === undefined) {
         other.disconnect(
-            this, scope, (direction === 'output') ? 'input' : 'output');
+            this, scope, (direction === 'output') ? 'input' : 'output', false);
     }
 }
 
