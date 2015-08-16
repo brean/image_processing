@@ -21,7 +21,6 @@ class TaskManager(object):
         if 'input' in task.task_data:
             for scope, uuids in task.task_data['input'].items():
                 for uuid in uuids:
-                    print 'run required task', uuid, self.tasks[uuid].name
                     self.run_task(self.tasks[uuid])
         task.run()
 

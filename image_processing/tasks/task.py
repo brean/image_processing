@@ -47,7 +47,6 @@ class Task(object):
         if self.finished:
             return
         self.execute_task()
-        print 'done', self.uuid, self.name
         # this task is done run all tasks that require this one next
         if 'output' in self.task_data:
             for scope, uuids in self.task_data['output'].items():
