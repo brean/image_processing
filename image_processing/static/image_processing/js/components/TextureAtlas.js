@@ -14,5 +14,7 @@ TextureAtlas.prototype.constructor = TextureAtlas;
 TextureAtlas.input = ['image'];
 TextureAtlas.output = ['image', 'xml'];
 TextureAtlas._name = 'texture_atlas'
-TextureAtlas.config = null;
+TextureAtlas.config = {
+    name: "text"
+};
 TextureAtlas.icon = '<i class="glyphicon glyphicon-th"></i>';

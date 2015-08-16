@@ -9,6 +9,13 @@ BLOCKSIZE = 65536  # block size for hashing
 class Folder(Task):
     name = 'image folder'
 
+    def __init__(self, mgr, uuid, task_data):
+        super(Folder, self).__init__(mgr, uuid, task_data)
+        folder = task_data['config']['folder']
+        if folder.startswith(os.sep):
+            folder = folder[1:]
+        self.folder = os.path.join('workspace', folder)
+
     def sha1(self, filename):
         """
         get sha1 hash from file (to check for file changes)
@@ -20,11 +27,6 @@ class Folder(Task):
                 hasher.update(buf)
                 buf = afile.read(BLOCKSIZE)
         return hasher.hexdigest()
-
-
-    def __init__(self, mgr, uuid, task_data):
-        super(Folder, self).__init__(mgr, uuid, task_data)
-        self.folder = task_data['config']['folder']
 
     def copy_file(self, filename):
         """
