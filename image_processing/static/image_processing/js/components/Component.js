@@ -137,7 +137,7 @@ Component.prototype.showConfig = function() {
  *
  */
 Component.prototype.disconnect = function(other, scope, direction, both) {
-    var uuids = this.data[end][scope];
+    var uuids = this.data[direction][scope];
     // find this uuid in other datas input/output
     var pos = uuids.indexOf(other.uuid);
     if (pos >= 0) {
