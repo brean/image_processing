@@ -12,7 +12,7 @@ Folder.prototype = Object.create(Component.prototype);
 Folder.prototype.constructor = Folder;
 
 Folder.input = ['image', 'xml'];
-Folder.output = ['image'];
+Folder.output = ['image', 'xml'];
 Folder._name = 'folder'
 Folder.config = {
     folder: "list"
