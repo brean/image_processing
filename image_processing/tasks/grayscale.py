@@ -9,9 +9,8 @@ from .task import Task
 class Grayscale(Task):
     name = 'grayscale'
 
-    def _grayscale(self, files):
+    def grayscale(self, files):
         self.tmp_dir = tempfile.mkdtemp()
-        print self.tmp_dir
         tmp_files = []
         for img in files:
             name = img.split(os.path.sep)[-1]
@@ -27,8 +26,8 @@ class Grayscale(Task):
         if os.path.exists(self.tmp_dir):
             shutil.rmtree(self.tmp_dir)
 
-    def run(self):
-        files = super(Grayscale, self).run()
-        return {
-            'image': self._grayscale(files['image'])
+    def execute_task(self):
+        self.files = {
+            'image': self.grayscale(self.get_input_files())
         }
+        super(Grayscale, self).execute_task()

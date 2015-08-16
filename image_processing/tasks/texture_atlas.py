@@ -33,14 +33,12 @@ class TextureAtlas(Task):
 
     def texture_atlas(self, files):
         self.texture_file = tempfile.mkstemp(suffix='.png')[1]
-        print self.texture_file
         images = [(name, Image.open(name)) for name in files]
 
         placements = pack_images(images, padding=2, sort='maxarea',
                                  maxdim=2048, dstfilename=self.texture_file)
         self.xml_file = tempfile.mkstemp(suffix='.xml')[1]
         file(self.xml_file, 'w').write(gen_xml(placements))
-        print self.xml_file
         return {
             'image': [self.texture_file],
             'xml': [self.xml_file]
@@ -52,6 +50,6 @@ class TextureAtlas(Task):
         if os.path.isfile(self.xml_file):
             os.remove(self.xml_file)
 
-    def run(self):
-        files = super(TextureAtlas, self).run()
-        return self.texture_atlas(files['image'])
+    def execute_task(self):
+        self.files = self.texture_atlas(self.get_input_files())
+        super(TextureAtlas, self).execute_task()

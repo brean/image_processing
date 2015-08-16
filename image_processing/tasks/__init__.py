@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-__all__ = ['grayscale', 'task', 'folder', 'texture_atlas']
+__all__ = ['grayscale', 'task', 'folder', 'texture_atlas', 'task_manager']
