@@ -9,7 +9,7 @@ from PIL import Image
 
 def gen_xml(placements, name=None, rotated=False):
     """Return xml texture atlas"""
-    header = u'<TextureAtlas imagePath="%s">' % name
+    header = u'<TextureAtlas imagePath="%s.png">' % name
 
     data = u''
     for area, name, im in placements:
