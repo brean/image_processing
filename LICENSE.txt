@@ -1,4 +1,0 @@
-Apache v2 License
-
-
-Copyright 2015 Andreas Bresser
