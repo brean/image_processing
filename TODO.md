@@ -3,6 +3,7 @@
 - developer documentation
 - more examples
 - switch to aiohttp
+- live-status from WebSocket
 - create sth. own based on [d3](http://d3js.org) with scaling and zoom instead of using jsplumb
 - unit tests
 - create [celery](http://www.celeryproject.org/) tasks
