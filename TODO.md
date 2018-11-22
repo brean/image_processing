@@ -1,1 +1,15 @@
-
+## ToDo / wishlist
+- video how to install & use it
+- developer documentation
+- more examples
+- switch to aiohttp
+- create sth. own based on [d3](http://d3js.org) with scaling and zoom instead of using jsplumb
+- unit tests
+- create [celery](http://www.celeryproject.org/) tasks
+- more tasks
+   - merge with background
+   - slice image into tiles (so the parts can be used in a texture atlas)
+   - write text
+   - scale/resize (create thumbnails)
+   - image filter from PIL (sharpen, smoth, find_edges, blur, ...)
+   - image analysis (Hough Line Transform, Histogram, ...)
